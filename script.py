@@ -9,6 +9,14 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 import random
 
 
+commendations = ['Молодец!', 'Ты меня очень обрадовал!', 'Хорошо!',
+                 'Хвалю!', 'Великолепно!', 'Замечательно!',
+                 'Я тобой горжусь!', 'Сказано здорово – просто и ясно!', 'Потрясающе!',
+                 'Я вижу, как ты стараешься!', 'Ты растешь над собой!', 'Ты многое сделал, я это вижу!',
+                 'Теперь у тебя точно все получится!', ' Очень хороший ответ!', 'Талантливо!'
+                 ]
+
+
 def fix_marks(child):
     try:
         schoolkid = Schoolkid.objects.get(full_name__contains=f"{child}")
@@ -42,14 +50,8 @@ def remove_commendation(child):
 
 def create_commendation(child, subject):
     try:
-        schoolkid = Schoolkid.objects.get(full_name__contains=f"{child}")
-        subject = Subject.objects.get(year_of_study__contains="6", title__contains=f"{subject}")
-        commendations = ['Молодец!', 'Ты меня очень обрадовал!', 'Хорошо!',
-                         'Хвалю!', 'Великолепно!', 'Замечательно!',
-                         'Я тобой горжусь!', 'Сказано здорово – просто и ясно!', 'Потрясающе!',
-                         'Я вижу, как ты стараешься!', 'Ты растешь над собой!', 'Ты многое сделал, я это вижу!',
-                         'Теперь у тебя точно все получится!', ' Очень хороший ответ!', 'Талантливо!'
-                         ]
+        schoolkid = Schoolkid.objects.get(full_name__contains=child)
+        subject = Subject.objects.get(year_of_study__contains="6", title__contains=subject)
         commendation = random.choice(commendations)
         teacher_name = Lesson.objects.filter(
             subject=subject,
