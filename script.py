@@ -38,17 +38,6 @@ def remove_chastisements(child):
         print("Schoolkid matching query does not exist.")
 
 
-def remove_commendation(child):
-    try:
-        schoolkid = Schoolkid.objects.get(full_name__contains=child)
-        commendation = Commendation.objects.filter(schoolkid=schoolkid)
-        commendation.delete()
-    except MultipleObjectsReturned:
-        print("There are several such schoolkids.")
-    except ObjectDoesNotExist:
-        print("Schoolkid matching query does not exist.")
-
-
 def create_commendation(child, subject):
     try:
         schoolkid = Schoolkid.objects.get(full_name__contains=child)
