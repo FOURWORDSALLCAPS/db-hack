@@ -17,34 +17,33 @@ commendations = ['Молодец!', 'Ты меня очень обрадовал
                  ]
 
 
-def fix_marks(child):
+def get_schoolkid(child):
     try:
-        schoolkid = Schoolkid.objects.get(full_name__contains=child)
-        Mark.objects.filter(schoolkid=schoolkid, points__in=[2, 3]).update(points=5)
+        return Schoolkid.objects.get(full_name__contains=child)
     except MultipleObjectsReturned:
         print("There are several such schoolkids.")
     except ObjectDoesNotExist:
         print("Schoolkid matching query does not exist.")
+
+
+def fix_marks(child):
+    schoolkid = get_schoolkid(child)
+    Mark.objects.filter(schoolkid=schoolkid, points__in=[2, 3]).update(points=5)
 
 
 def remove_chastisements(child):
-    try:
-        schoolkid = Schoolkid.objects.get(full_name__contains=child)
-        chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
-        chastisements.delete()
-    except MultipleObjectsReturned:
-        print("There are several such schoolkids.")
-    except ObjectDoesNotExist:
-        print("Schoolkid matching query does not exist.")
+    schoolkid = get_schoolkid(child)
+    chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
+    chastisements.delete()
 
 
 def create_commendation(child, subject):
+    schoolkid = get_schoolkid(child)
     try:
-        schoolkid = Schoolkid.objects.get(full_name__contains=child)
         subject = Subject.objects.get(year_of_study__contains="6", title__contains=subject)
         commendation = random.choice(commendations)
         teacher_name = Lesson.objects.filter(
-            subject='subject',
+            subject=subject,
         ).first().teacher.full_name
         date_last_lesson = Lesson.objects.exclude(
             subject__title__contains=subject
@@ -58,6 +57,6 @@ def create_commendation(child, subject):
             teacher=teacher
         )
     except MultipleObjectsReturned:
-        print("There are several such schoolkids.")
+        print("There are several such subject.")
     except ObjectDoesNotExist:
-        print("Either the schoolkid or subject does not exist.")
+        print("Subject matching query does not exist.")
