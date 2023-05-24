@@ -1,5 +1,11 @@
-from datacenter.models import *
-from django.core.exceptions import ObjectDoesNotExist
+from datacenter.models import Teacher
+from datacenter.models import Mark
+from datacenter.models import Subject
+from datacenter.models import Commendation
+from datacenter.models import Chastisement
+from datacenter.models import Lesson
+from datacenter.models import Schoolkid
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 import random
 
 
