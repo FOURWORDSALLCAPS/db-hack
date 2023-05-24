@@ -19,18 +19,17 @@ commendations = ['Молодец!', 'Ты меня очень обрадовал
 
 def fix_marks(child):
     try:
-        schoolkid = Schoolkid.objects.get(full_name__contains=f"{child}")
-        marks = Mark.objects.filter(schoolkid=schoolkid, points__in=[2, 3])
-        for mark in marks:
-            mark.points = 5
-            mark.save()
+        schoolkid = Schoolkid.objects.get(full_name__contains=child)
+        Mark.objects.filter(schoolkid=schoolkid, points__in=[2, 3]).update(points=5)
+    except MultipleObjectsReturned:
+        print("There are several such schoolkids.")
     except ObjectDoesNotExist:
         print("Either the entry or blog doesn't exist.")
 
 
 def remove_chastisements(child):
     try:
-        schoolkid = Schoolkid.objects.get(full_name__contains=f"{child}")
+        schoolkid = Schoolkid.objects.get(full_name__contains=child)
         chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
         for chastisement in chastisements:
             chastisement.delete()
@@ -40,10 +39,11 @@ def remove_chastisements(child):
 
 def remove_commendation(child):
     try:
-        schoolkid = Schoolkid.objects.get(full_name__contains=f"{child}")
-        commendations = Commendation.objects.filter(schoolkid=schoolkid)
-        for commendation in commendations:
-            commendation.delete()
+        schoolkid = Schoolkid.objects.get(full_name__contains=child)
+        commendation = Commendation.objects.filter(schoolkid=schoolkid)
+        commendation.delete()
+    except MultipleObjectsReturned:
+        print("There are several such schoolkids.")
     except ObjectDoesNotExist:
         print("Either the entry or blog doesn't exist.")
 
@@ -57,12 +57,12 @@ def create_commendation(child, subject):
             subject=subject,
             group_letter__contains='А'
         ).first().teacher.full_name
-        teacher = Teacher.objects.filter(full_name__contains=f"{teacher_name}").first()
         date_last_lesson = Lesson.objects.exclude(
             year_of_study__contains="6",
             group_letter__contains="А",
             subject__title__contains=subject
         ).order_by('-date').first().date
+        teacher = Teacher.objects.filter(full_name__contains=teacher_name).first()
         Commendation.objects.create(
             text=commendation,
             created=f"{date_last_lesson}",
