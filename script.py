@@ -31,8 +31,9 @@ def remove_chastisements(child):
     try:
         schoolkid = Schoolkid.objects.get(full_name__contains=child)
         chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
-        for chastisement in chastisements:
-            chastisement.delete()
+        chastisements.delete()
+    except MultipleObjectsReturned:
+        print("There are several such schoolkids.")
     except ObjectDoesNotExist:
         print("Either the entry or blog doesn't exist.")
 
@@ -54,12 +55,9 @@ def create_commendation(child, subject):
         subject = Subject.objects.get(year_of_study__contains="6", title__contains=subject)
         commendation = random.choice(commendations)
         teacher_name = Lesson.objects.filter(
-            subject=subject,
-            group_letter__contains='А'
+            subject='subject',
         ).first().teacher.full_name
         date_last_lesson = Lesson.objects.exclude(
-            year_of_study__contains="6",
-            group_letter__contains="А",
             subject__title__contains=subject
         ).order_by('-date').first().date
         teacher = Teacher.objects.filter(full_name__contains=teacher_name).first()
