@@ -16,7 +16,6 @@
   - `from script import fix_marks` - для исправления оценок.
   - `from script import create_commendation` - для создания похвалы.
   - `from script import remove_chastisements` - для удаления жалоб.
-  - `from script import remove_commendation` - для удаления похвал.
 4. Откройте сайт электронного дневника и найдите свою учетную запись
 5. Проверьте, исправились ли оценки, исчезли ли жалобы, появилась ли похвала от учителя.
 
@@ -31,9 +30,6 @@ create_commendation('Лаптина Елена', 'Математика')
 ```
 ```
 remove_chastisements('Федотов Кирилл')
-```
-```
-remove_commendation('Панфилов Иван')
 ```
 
 ### Дополнительные ресурсы
