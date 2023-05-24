@@ -5,7 +5,6 @@ from datacenter.models import Commendation
 from datacenter.models import Chastisement
 from datacenter.models import Lesson
 from datacenter.models import Schoolkid
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 import random
 
 
@@ -20,7 +19,7 @@ commendations = ['Молодец!', 'Ты меня очень обрадовал
 def get_schoolkid(child):
     try:
         return Schoolkid.objects.get(full_name__contains=child)
-    except MultipleObjectsReturned:
+    except Schoolkid.MultipleObjectsReturned:
         print("There are several such schoolkids.")
     except ObjectDoesNotExist:
         print("Schoolkid matching query does not exist.")
@@ -58,5 +57,5 @@ def create_commendation(child, subject):
         )
     except MultipleObjectsReturned:
         print("There are several such subject.")
-    except ObjectDoesNotExist:
+    except Subject.DoesNotExist:
         print("Subject matching query does not exist.")
