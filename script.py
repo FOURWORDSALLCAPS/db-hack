@@ -24,7 +24,7 @@ def fix_marks(child):
     except MultipleObjectsReturned:
         print("There are several such schoolkids.")
     except ObjectDoesNotExist:
-        print("Either the entry or blog doesn't exist.")
+        print("Schoolkid matching query does not exist.")
 
 
 def remove_chastisements(child):
@@ -35,7 +35,7 @@ def remove_chastisements(child):
     except MultipleObjectsReturned:
         print("There are several such schoolkids.")
     except ObjectDoesNotExist:
-        print("Either the entry or blog doesn't exist.")
+        print("Schoolkid matching query does not exist.")
 
 
 def remove_commendation(child):
@@ -46,7 +46,7 @@ def remove_commendation(child):
     except MultipleObjectsReturned:
         print("There are several such schoolkids.")
     except ObjectDoesNotExist:
-        print("Either the entry or blog doesn't exist.")
+        print("Schoolkid matching query does not exist.")
 
 
 def create_commendation(child, subject):
@@ -68,5 +68,7 @@ def create_commendation(child, subject):
             subject=subject,
             teacher=teacher
         )
+    except MultipleObjectsReturned:
+        print("There are several such schoolkids.")
     except ObjectDoesNotExist:
-        print("Either the entry or blog doesn't exist.")
+        print("Either the schoolkid or subject does not exist.")
