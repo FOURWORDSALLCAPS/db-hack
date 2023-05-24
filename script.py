@@ -46,7 +46,7 @@ def create_commendation(child, subject):
         commendation = random.choice(commendations)
         teacher_name = Lesson.objects.filter(
             subject=subject,
-        ).first().teacher
+        ).first()
         if teacher_name is not None:
             teacher_name = teacher_name.teacher.full_name
         date_last_lesson = Lesson.objects.exclude(
