@@ -20,19 +20,23 @@ def get_schoolkid(child):
         return Schoolkid.objects.get(full_name__contains=child)
     except Schoolkid.MultipleObjectsReturned:
         print("There are several such schoolkids.")
-    except ObjectDoesNotExist:
+        return None
+    except Schoolkid.DoesNotExist:
         print("Schoolkid matching query does not exist.")
+        return None
 
 
 def fix_marks(child):
     schoolkid = get_schoolkid(child)
-    Mark.objects.filter(schoolkid=schoolkid, points__in=[2, 3]).update(points=5)
+    if schoolkid is not None:
+        Mark.objects.filter(schoolkid=schoolkid, points__in=[2, 3]).update(points=5)
 
 
 def remove_chastisements(child):
     schoolkid = get_schoolkid(child)
-    chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
-    chastisements.delete()
+    if schoolkid is not None:
+        chastisements = Chastisement.objects.filter(schoolkid=schoolkid)
+        chastisements.delete()
 
 
 def create_commendation(child, subject):
@@ -42,19 +46,24 @@ def create_commendation(child, subject):
         commendation = random.choice(commendations)
         teacher_name = Lesson.objects.filter(
             subject=subject,
-        ).first().teacher.full_name
+        ).first().teacher
+        if teacher_name is not None:
+            teacher_name = teacher_name.teacher.full_name
         date_last_lesson = Lesson.objects.exclude(
             subject__title__contains=subject
-        ).order_by('-date').first().date
+        ).order_by('-date').first()
         teacher = Teacher.objects.filter(full_name__contains=teacher_name).first()
-        Commendation.objects.create(
-            text=commendation,
-            created=f"{date_last_lesson}",
-            schoolkid=schoolkid,
-            subject=subject,
-            teacher=teacher
-        )
-    except MultipleObjectsReturned:
+        if date_last_lesson is not None:
+            date_last_lesson = date_last_lesson.date
+        if schoolkid is not None:
+            Commendation.objects.create(
+                text=commendation,
+                created=f"{date_last_lesson}",
+                schoolkid=schoolkid,
+                subject=subject,
+                teacher=teacher
+            )
+    except Subject.MultipleObjectsReturned:
         print("There are several such subject.")
     except Subject.DoesNotExist:
         print("Subject matching query does not exist.")
