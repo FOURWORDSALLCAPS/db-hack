@@ -43,7 +43,7 @@ def create_commendation(child, subject):
     schoolkid = get_schoolkid(child)
     try:
         subject = Subject.objects.get(year_of_study__contains="6", title__contains=subject)
-        commendation = random.choice(commendations)
+        commendation = random.choice(COMMENDATION)
         teacher_name = Lesson.objects.filter(
             subject=subject,
         ).first()
